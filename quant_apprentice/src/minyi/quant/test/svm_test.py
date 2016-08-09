@@ -5,7 +5,7 @@ import pandas as pd
 from pandas import Series, DataFrame
 from matplotlib import pyplot as plt
 from sklearn import svm
-
+from sklearn.preprocessing import Imputer
 
 def load_data(file_name):
     # loading data
@@ -25,6 +25,8 @@ dataSet4 = load_data(r"D:\Python_Workspace\Pycharm_workspace\Uqer\002230.XSHE201
 dataSet = pd.concat([dataSet1, dataSet2], axis=0)
 dataSet = pd.concat([dataSet, dataSet3], axis=0)
 dataSet = pd.concat([dataSet, dataSet4], axis=0)
+
+
 ######################################### Feature Fetching ###########################################
 
 # Features representation
@@ -132,21 +134,29 @@ multiY[pUp] = 0
 multiY[pDown] = 1
 multiY[pStat] = 2
 
-# divide the dataset into trainSet, and testSst
-numTrain = 1200
-numTest = 500
-# rebalance the ratio of upward, downward and stationary data
-numTrainUp = 250
-numTrainDown = 250
-numTrainStat = 400
+# # divide the dataset into trainSet, and testSst
+# numTrain = 1200
+# numTest = 500
+# # rebalance the ratio of upward, downward and stationary data
+# numTrainUp = 250
+# numTrainDown = 250
+# numTrainStat = 400
 
 # # divide the dataset into trainSet, and testSst
-# numTrain = 5000
-# numTest = 2000
+# numTrain = 13000
+# numTest = 500
 # # rebalance the ratio of upward, downward and stationary data
-# numTrainUp = 1250
-# numTrainDown = 1250
-# numTrainStat = 2000
+# numTrainUp = 2000
+# numTrainDown = 2000
+# numTrainStat = 6000
+
+# divide the dataset into trainSet, and testSst
+numTrain = 13000
+numTest = 500
+# rebalance the ratio of upward, downward and stationary data
+numTrainUp = 2000
+numTrainDown = 2000
+numTrainStat = 6000
 
 pUpTrain = pUp[:numTrainUp]
 pDownTrain = pDown[:numTrainDown]
@@ -166,14 +176,24 @@ testMultiY = multiY[numTrain+1:numTrain+numTest+1]
 
 ######################################### SVM Training ###########################################
 # training a multi-class svm model
-Model = svm.LinearSVC(C=2.)
+# Model = svm.LinearSVC(C=2.)
+Model = svm.SVC(C=2.5)
 # trainSet = np.nan_to_num(trainSet)
 print np.any(np.isnan(trainSet))
+print np.all(np.isfinite(trainSet))
 print np.any(np.isnan(trainMultiY))
+print np.all(np.isfinite(trainMultiY))
+trainSet = Imputer().fit_transform(trainSet)
 Model.fit(trainSet, trainMultiY)
+
+print np.any(np.isnan(testSet))
+print np.all(np.isfinite(testSet))
+testSet = Imputer().fit_transform(testSet)
 pred = Model.predict(testSet)
+
 ap = Model.score(trainSet, trainMultiY)
 print("trainSet mean accuracy: ", ap)
+
 ap = Model.score(testSet, testMultiY)
 print("testSet mean accuracy: ", ap)
 ######################################### SVM Training ###########################################

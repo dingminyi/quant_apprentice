@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import datetime
 import numpy as np
 import pandas as pd
 from pandas import Series, DataFrame
@@ -15,7 +16,15 @@ def load_data(file_name):
     fp.close()
     orderbook_json_dict = json.loads(json_string.decode('unicode_escape'))
     data_list = orderbook_json_dict["data"]
-    data_list = data_list[300:]
+    data_list = data_list[300:-1200]
+    morning_endtime = datetime.datetime.strptime("11:30:00", "%H:%M:%S").time()
+    noon_starttime = datetime.datetime.strptime("1:00:00", "%H:%M:%S").time()
+    new_data_list = []
+    for data in data_list:
+        data_time = datetime.datetime.strptime(data["dataTime"], "%H:%M:%S").time()
+        if data_time <  morning_endtime and data_time > noon_starttime:
+            new_data_list.append(data)
+    data_list = new_data_list
     return DataFrame(data_list)
 
 dataSet1 = load_data(r"D:\Python_Workspace\Pycharm_workspace\Uqer\002230.XSHE2016-08-02-20-47-34.json")
@@ -151,12 +160,12 @@ multiY[pStat] = 2
 # numTrainStat = 6000
 
 # divide the dataset into trainSet, and testSst
-numTrain = 13000
-numTest = 500
+numTrain = 6500
+numTest = 1000
 # rebalance the ratio of upward, downward and stationary data
-numTrainUp = 2000
-numTrainDown = 2000
-numTrainStat = 6000
+numTrainUp = 1200
+numTrainDown = 1200
+numTrainStat = 3500
 
 pUpTrain = pUp[:numTrainUp]
 pDownTrain = pDown[:numTrainDown]
@@ -177,7 +186,7 @@ testMultiY = multiY[numTrain+1:numTrain+numTest+1]
 ######################################### SVM Training ###########################################
 # training a multi-class svm model
 # Model = svm.LinearSVC(C=2.)
-Model = svm.SVC(C=2.5)
+Model = svm.SVC(C=10.)
 # trainSet = np.nan_to_num(trainSet)
 print np.any(np.isnan(trainSet))
 print np.all(np.isfinite(trainSet))

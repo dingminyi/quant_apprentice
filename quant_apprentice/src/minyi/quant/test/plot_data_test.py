@@ -27,10 +27,10 @@ def load_data(file_name):
     data_list = new_data_list
     return DataFrame(data_list)
 
-dataSet1 = load_data(r"D:\Python_Workspace\Pycharm_workspace\Uqer\002230.XSHE2016-08-02-20-47-34.json")
-dataSet2 = load_data(r"D:\Python_Workspace\Pycharm_workspace\Uqer\002230.XSHE2016-08-03-16-26-29.json")
-dataSet3 = load_data(r"D:\Python_Workspace\Pycharm_workspace\Uqer\002230.XSHE2016-08-04-16-14-37.json")
-dataSet4 = load_data(r"D:\Python_Workspace\Pycharm_workspace\Uqer\002230.XSHE2016-08-05-22-32-27.json")
+dataSet1 = load_data(r"..\..\..\..\..\002230.XSHE2016-08-02-20-47-34.json")
+dataSet2 = load_data(r"..\..\..\..\..\002230.XSHE2016-08-03-16-26-29.json")
+dataSet3 = load_data(r"..\..\..\..\..\002230.XSHE2016-08-04-16-14-37.json")
+dataSet4 = load_data(r"..\..\..\..\..\002230.XSHE2016-08-05-22-32-27.json")
 dataSet = pd.concat([dataSet1, dataSet2], axis=0)
 dataSet = pd.concat([dataSet, dataSet3], axis=0)
 dataSet = pd.concat([dataSet, dataSet4], axis=0)
